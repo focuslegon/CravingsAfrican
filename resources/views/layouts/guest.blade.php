@@ -1,30 +1,51 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="csrf-token" content="{{ csrf_token() }}">
-
-        <title>{{ config('app.name', 'Laravel') }}</title>
-
-        <!-- Fonts -->
-        <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
-        <!-- Scripts -->
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
-    </head>
-    <body class="font-sans text-gray-900 antialiased">
-        <div class="min-h-screen flex flex-col sm:justify-center items-center pt-6 sm:pt-0 bg-gray-100 dark:bg-gray-900">
-            <div>
-                <a href="/" wire:navigate>
-                    <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-                </a>
-            </div>
-
-            <div class="w-full sm:max-w-md mt-6 px-6 py-4 bg-white dark:bg-gray-800 shadow-md overflow-hidden sm:rounded-lg">
+   <head>
+    @include('layouts.includes.head')
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Plugins CSS File -->
+    <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <!-- Main CSS File -->
+    <link rel="stylesheet" href="/assets/css/demo41.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/vendor/fontawesome-free/css/all.min.css">
+  
+   </head>
+    <body >
+        @persist('dialogs') 
+        <x-toast /> 
+        <x-dialog /> 
+        @endpersist
+      <div class="page-wrapper">
+        @livewire('layout.header')
+        <!-- End .header -->
+        <main class="main">
+       
                 {{ $slot }}
-            </div>
-        </div>
-    </body>
+     
+        </main>
+        @include('layouts.includes.footer')
+    </div>
+    <div class="loading-overlay">
+		<div class="bounce-loader">
+			<div class="bounce1"></div>
+			<div class="bounce2"></div>
+			<div class="bounce3"></div>
+		</div>
+	</div>
+	<div class="mobile-menu-overlay"></div>
+
+    @include('layouts.includes.mobile-menu')
+    @include('layouts.includes.sticky-navbar')
+
+    <a id="scroll-top" href="#top" title="Top" role="button"><i class="icon-angle-up"></i></a>
+	<!-- Plugins JS File -->
+	<script src="/assets/js/jquery.min.js"></script>
+	<script src="/assets/js/bootstrap.bundle.min.js"></script>
+	<script src="/assets/js/optional/isotope.pkgd.min.js"></script>
+	<script src="/assets/js/plugins.min.js"></script>
+	<script src="/assets/js/jquery.appear.min.js"></script>
+	<!-- Main JS File -->
+	<script src="/assets/js/main.min.js"></script>
+
+</body>
 </html>

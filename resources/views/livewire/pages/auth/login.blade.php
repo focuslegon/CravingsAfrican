@@ -4,6 +4,7 @@ use App\Livewire\Forms\LoginForm;
 use Illuminate\Support\Facades\Session;
 use Livewire\Attributes\Layout;
 use Livewire\Volt\Component;
+use Illuminate\Support\Facades\Auth;
 
 new #[Layout('layouts.guest')] class extends Component
 {
@@ -20,52 +21,71 @@ new #[Layout('layouts.guest')] class extends Component
 
         Session::regenerate();
 
-        $this->redirectIntended(default: route('dashboard', absolute: false), navigate: true);
+        $this->redirect(route('dashboard'), navigate: false);
+
     }
 }; ?>
 
-<div>
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
 
-    <form wire:submit="login">
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input wire:model="form.email" id="email" class="block mt-1 w-full" type="email" name="email" required autofocus autocomplete="username" />
-            <x-input-error :messages="$errors->get('form.email')" class="mt-2" />
-        </div>
-
-        <!-- Password -->
-        <div class="mt-4">
-            <x-input-label for="password" :value="__('Password')" />
-
-            <x-text-input wire:model="form.password" id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="current-password" />
-
-            <x-input-error :messages="$errors->get('form.password')" class="mt-2" />
-        </div>
-
-        <!-- Remember Me -->
-        <div class="block mt-4">
-            <label for="remember" class="inline-flex items-center">
-                <input wire:model="form.remember" id="remember" type="checkbox" class="rounded dark:bg-gray-900 border-gray-300 dark:border-gray-700 text-indigo-600 shadow-sm focus:ring-indigo-500 dark:focus:ring-indigo-600 dark:focus:ring-offset-gray-800" name="remember">
-                <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">{{ __('Remember me') }}</span>
-            </label>
-        </div>
-
-        <div class="flex items-center justify-end mt-4">
-            @if (Route::has('password.request'))
-                <a class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800" href="{{ route('password.request') }}" wire:navigate>
-                    {{ __('Forgot your password?') }}
-                </a>
+<div class="container d-flex justify-content-center">
+    <div class="col-md-6">
+        <!-- Session Status -->
+        <div class="mb-4">
+            @if (session('status'))
+                <div class="alert alert-success" role="alert">
+                    {{ session('status') }}
+                </div>
             @endif
-
-            <x-primary-button class="ms-3">
-                {{ __('Log in') }}
-            </x-primary-button>
         </div>
-    </form>
+
+        <form wire:submit.prevent="login">
+            <!-- Username -->
+            <div class="mb-3">
+                <label for="username" class="form-label">{{ __('Username') }}</label>
+                <input wire:model="form.username" id="username" class="form-control" type="text" name="username" required autofocus autocomplete="username">
+                @if ($errors->has('form.username'))
+                    <div class="mt-2 text-danger">
+                        {{ $errors->first('form.username') }}
+                    </div>
+                @endif
+            </div>
+
+            <!-- Password -->
+            <div class="mb-3">
+                <label for="password" class="form-label">{{ __('Password') }}</label>
+                <input wire:model="form.password" id="password" class="form-control" type="password" name="password" required autocomplete="current-password">
+                @if ($errors->has('form.password'))
+                    <div class="mt-2 text-danger">
+                        {{ $errors->first('form.password') }}
+                    </div>
+                @endif
+            </div>
+
+            <!-- Remember Me -->
+            <div class="mb-3 form-check">
+                <input wire:model="form.remember" id="remember" type="checkbox" class="form-check-input" name="remember">
+                <label for="remember" class="form-check-label">{{ __('Remember me') }}</label>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                @if (Route::has('password.request'))
+                    <a class=" text-decoration-none" href="{{ route('password.request') }}">
+                        {{ __('Forgot your password?') }}
+                    </a>
+                @endif
+
+                <button type="submit" class="btn btn-primary">
+                    {{ __('Log in') }}
+                </button>
+            </div>
+
+            @if (Route::has('register'))
+                <div class="">
+                    <a class="text-decoration-none btn btn-gray" href="{{ route('register') }}">
+                        {{ __('Register Account') }}
+                    </a>
+                </div>
+            @endif
+        </form>
+    </div>
 </div>
