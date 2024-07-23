@@ -3,19 +3,30 @@
 use Illuminate\Support\Facades\Route;
 use Livewire\Volt\Volt;
 
-Volt::route('/', 'welcome.index');
-
 Route::get('/test', function () {
   
 });
 
+Volt::route('/', 'welcome.index')->name('welcome');
+
+// food-items group
+Route::group(['prefix' => 'food-items', 'as' => 'food-items.'], function () {
+    // items
+    Volt::route('/', 'food-items.index')->name('index');
+    // item-details
+    Volt::route('/{id}', 'food-items.details')->name('details');
+});
+
+
 
 Route::group(['middleware' => ['auth', 'verified']], function () {
+    
 
     // user account group 
     // Route::group(['prefix' => 'account', 'as' => 'account.'], function () {
       
     // });
+
     Volt::route('dashboard', 'account.dashboard')
            ->name('dashboard');
     Volt::route('password', 'account.password')

@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('tags')->nullable();
             $table->tinyInteger('order')->default(0);
             $table->double('price');
+            $table->string('sku', 50)->unique()->nullable();
             $table->tinyText('image')->nullable();
             $table->tinyInteger('rating')->default(0);
             $table->string('status', 50)->default('active');

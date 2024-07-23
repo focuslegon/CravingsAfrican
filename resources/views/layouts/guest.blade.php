@@ -8,6 +8,7 @@
     <!-- Main CSS File -->
     <link rel="stylesheet" href="/assets/css/demo41.min.css">
     <link rel="stylesheet" type="text/css" href="/assets/vendor/fontawesome-free/css/all.min.css">
+    <link rel="stylesheet" type="text/css" href="/assets/css/custom.css?v={{config('app.version')}}">
   
    </head>
     <body >

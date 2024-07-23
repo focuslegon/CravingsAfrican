@@ -2,9 +2,12 @@
 
 use App\Livewire\Actions\Logout;
 use Livewire\Volt\Component;
+use App\Models\Category;
 
 new class extends Component
 {
+    public $active_category;
+    public $search = '';
     /**
      * Log the current user out of the application.
      */
@@ -13,6 +16,23 @@ new class extends Component
         $logout();
 
         $this->redirect('/', navigate: false);
+    }
+
+    public function searchFoodItem() {
+        $this->dispatch('searchFoodItem', $this->search);
+    }
+
+    public function changeCategory($id=null) {
+        $this->active_category = $id;
+        $this->dispatch('changeCategory', $id);   
+    }
+
+    public function with()
+    {
+        $categories = Category::where('status', 'active')->orderBy('order')->get();
+        return [
+            'categories' => $categories,
+        ];
     }
 }; ?>
 
@@ -105,7 +125,7 @@ new class extends Component
                         <a href="#" class="search-toggle" role="button"><i class="icon-magnifier"></i></a>
                         <form action="#" method="get">
                             <div class="header-search-wrapper">
-                                <input type="search" class="form-control" name="q" id="q" placeholder="Search..." required="">
+                                <input type="search" class="form-control" wire:model.live="search" wire:keydown.debounce.1000ms="searchFoodItem" placeholder="Search..." required="">
                                 <button class="btn icon-magnifier p-0" title="search" type="submit"></button>
                             </div><!-- End .header-search-wrapper -->
                         </form>
@@ -125,22 +145,24 @@ new class extends Component
                             <i class="icon-cart-thick"></i>
                             <span class="cart-count badge-circle"></span>
                         </a>
-                    </div><!-- End .dropdown -->
-                </div><!-- End .header-right -->
-            </div><!-- End .container -->
-        </div><!-- End .header-middle -->
+                    </div>
+                </div>
+            </div>
+        </div>
     
+
         <div class="header-bottom d-none d-lg-block">
             <div class="container">
                 <ul class="category-menu">
-                    <li><a href="#.">DAILY 5✯ MEALS</a></li>
-                    <li><a href="#.">ADD-ON MEALS</a></li>
-                    <li><a href="#.">CHAIRMAN’S SATURDAY</a></li>
-                    <li><a href="#.">EXCELLENCY SUNDAY</a></li>
-                    <li><a href="#.">MAMA’S BOWL</a></li>
-                    <li><a href="#.">UPCOMING</a></li>
+                    <li><a href="javascript:;" class="{{!$active_category ? 'active' : ''}}" wire:click="changeCategory()">All</a></li>
+                    @forelse ($categories as $item)
+                    <li><a href="javascript:;" class="{{ $active_category == $item->id ? 'active' : ''}}" wire:click="changeCategory({{ $item->id }})">{{ $item->name }}</a></li>
+                    @empty
+                    @endforelse
                 </ul>
-            </div><!-- End .container -->
-        </div><!-- End .header-bottom -->
+            </div>
+        </div>
+
+
     </header>
     </div>

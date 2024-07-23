@@ -1,0 +1,4 @@
+.category-menu li a.active {
+    font-size: 21px;
+    color: #fde697 !important;
+  }

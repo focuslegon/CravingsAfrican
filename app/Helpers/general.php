@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Illuminate\Support\Number;
 use Illuminate\Support\Facades\Request;
+use Vinkla\Hashids\Facades\Hashids;
 
 if (!function_exists('user')) {
     /**
@@ -24,6 +25,21 @@ if (!function_exists('user')) {
 }
 
 
+if (!function_exists('encode_id')) {
+    function encode_id($id)
+    {
+        return Hashids::encode($id);
+    }
+}
+
+
+if (!function_exists('decode_id')) {
+    function decode_id($id)
+    {
+        return safe_array_access(Hashids::decode($id),[0]);
+    }
+}
+
 
 if (!function_exists('amount_format')) {
     /**
@@ -34,6 +50,32 @@ if (!function_exists('amount_format')) {
 
     }
 
+}
+
+if (!function_exists('generate_unique_code')) {
+    function generate_unique_code($length=8)
+   {
+   
+    if ($length < 1 || $length > 20) {
+        throw new InvalidArgumentException('Length must be between 1 and 20.');
+    }
+
+    // Generate a random number with desired length
+    $randomPartLength = $length - 6; // 6 digits for microtime part
+    $randomPart = (string) random_int(pow(10, $randomPartLength - 1), pow(10, $randomPartLength) - 1);
+
+    // Get the microtime as a numeric string
+    $microtimePart = substr(str_replace('.', '', microtime(true)), -6);
+
+    // Combine random part and microtime part
+    $uniqueCode = $randomPart . $microtimePart;
+
+    // If the combined length exceeds the desired length, truncate it
+    if (strlen($uniqueCode) > $length) {
+        $uniqueCode = substr($uniqueCode, 0, $length);
+    }
+    return $uniqueCode;
+   }
 }
 
 if (!function_exists('date_time_format')) {
@@ -173,6 +215,13 @@ if (!function_exists('gallery_file_upload')) {
         { 
             if (strlen($str) < $max) return $str;
             return substr($str, 0, $max).'...';
+        }
+    }
+
+    if (!function_exists('get_rating_percentage')) {
+        function get_rating_percentage($rate, $total=5) {
+            // the rating is up to 5 stars, so the rate i will pass should return the percentage over 100 of the total
+            return ($rate/$total) * 100;
         }
     }
 

@@ -273,6 +273,7 @@ class extends Component
              
                 }
             }
+            $md->sku = generate_unique_code();
             $md->save();
             $md->syncCategories($this->category);
             DB::commit();

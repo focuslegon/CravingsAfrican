@@ -17,6 +17,7 @@ class FoodItem extends Model
         'order',
         'price',
         'image',
+        'sku',
         'rating',
         'status',
     ];
@@ -25,7 +26,12 @@ class FoodItem extends Model
         return $this->belongsToMany(Category::class, 'food_item_categories');
     }
 
-    public function syncCategories($categoryIds)
+    public function getReviewsCountAttribute()
+    {
+        return $this->hasMany(Review::class)->count();
+    }
+
+    public function syncCategories(array $categoryIds=[])
     {
         $this->categories()->sync($categoryIds);
     }

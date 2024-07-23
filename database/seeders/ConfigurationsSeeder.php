@@ -6,6 +6,7 @@ use App\Models\Banner;
 use App\Models\Category;
 use App\Models\Company;
 use App\Models\Configurations\Configuration;
+use App\Models\FoodItem;
 use App\Models\Slider;
 use App\Models\Store;
 use App\Models\Transaction;
@@ -50,7 +51,7 @@ class ConfigurationsSeeder extends Seeder
             'linkedin' => [ 'option_value' => 'https://www.linkedin.com/cravings-africa', 'input_type' => 'text', 'sort'=>20 ],
             'time_zone' => [ 'option_value' => 'Africa/Accra', 'input_type' => 'text', 'sort'=>20 ],
             'date_format' => [ 'option_value' => 'd-M-Y', 'input_type' => 'text', 'sort'=>20 ],
-            'currency'=> [ 'option_value' => 'GHS', 'input_type' => 'text', 'sort'=>20 ],
+            'currency'=> [ 'option_value' => 'GBP', 'input_type' => 'text', 'sort'=>20 ],
             'currency_symbol'=> [ 'option_value' => '₵', 'input_type' => 'text', 'sort'=>20 ],
         ];
 
@@ -166,8 +167,8 @@ class ConfigurationsSeeder extends Seeder
             foreach ($banners as $key => $value) {
                 $store = Banner::where('image', $value)->first();
                 if (!$store) {
-                    $store = Slider::create([
-                        'name' => (string) 'Drinks '.$key,
+                    $store = Banner::create([
+                        'name' => (string) 'Drinks',
                         'image' => $value,
                         'status' => 'active',
                         'order' => $key+1,
@@ -189,6 +190,112 @@ class ConfigurationsSeeder extends Seeder
                     ]);
                 }
             }
-       
+
+            $cat1 = Category::where('name', 'Starter')->first();
+            // food items
+            $foodItems1 =  [
+                'Kebab'=>[
+                    'image' => '/assets/images/food/kebab.webp',
+                    'price' => 100,
+                    'sku' => generate_unique_code(),
+                    'rating' => 5,
+                    'description' => 'this is a description for kebab',
+                ],
+                'Fried Chicken' => [
+                    'image' => '/assets/images/food/friedchicken.jpg',
+                    'price' => 40,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for fried chicken',
+                ],
+                'Spring Rolls' => [
+                    'image' => '/assets/images/food/springrolls.jpg',
+                    'price' => 10,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for kebab',
+                ],
+                'Kelewele' => [
+                    'image' => '/assets/images/food/kelewele.jpeg',
+                    'price' => 10,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for kelewele',
+                ]
+            ];
+
+
+
+
+            foreach ($foodItems1 as $key => $value) {
+                $store = FoodItem::where('name', $key)->first();
+                if (!$store) {
+                    $store = FoodItem::create([
+                        'name' => $key,
+                        'image' => $value['image'],
+                        'price' => $value['price'],
+                        'rating' => $value['rating'],
+                        'sku' => $value['sku'],
+                        'description' => $value['description'],
+                    ]);
+                    $store->syncCategories([$cat1->id]);
+                }
+            }
+
+
+            // food items
+            $cat2 = Category::where('name', 'OUR 5✯ MEALS')->first();
+            $foodItems2 =  [
+                'Jollof Rice' => [
+                    'image' => '/assets/images/food/jollof.jpg',
+                    'price' => 100,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for jollof rice',
+                ],
+                'Kenkey with Red Snapper Fish & Shrimps' => [
+                    'image' => '/assets/images/food/kenkey.png',
+                    'price' => 40,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for kenkey',
+                ],
+                'Fufu with Light Soup' => [
+                    'image' => '/assets/images/food/fufu_lightsoup.jpg',
+                    'price' => 10,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for fufu with light soup',
+                ],
+                'Boiled Yam with Palava Sauce' => [
+                    'image' => '/assets/images/food/yam.png',
+                    'price' => 15,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for boiled yam with palava sauce',
+                ],
+                'Quick View' => [
+                    'image' => '/assets/images/food/banku-and-okra.jpg',
+                    'price' => 10,
+                    'rating' => 5,
+                    'sku' => generate_unique_code(),
+                    'description' => 'this is a description for banku and okra',
+                ],
+            ];
+
+            foreach ($foodItems2 as $key => $value) {
+                $store = FoodItem::where('name', $key)->first();
+                if (!$store) {
+                    $store = FoodItem::create([
+                        'name' => $key,
+                        'image' => $value['image'],
+                        'price' => $value['price'],
+                        'rating' => $value['rating'],
+                        'sku' => $value['sku'],
+                        'description' => $value['description'],
+                    ]);
+                    $store->syncCategories([$cat2->id]);
+                }
+            }
     }
 }
